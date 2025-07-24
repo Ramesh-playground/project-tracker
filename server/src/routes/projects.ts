@@ -231,18 +231,18 @@ router.get('/:id/dashboard', async (req: AuthRequest, res) => {
     }
 
     // Calculate financial metrics
-    const totalExpenses = project.expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-    const totalInvoiced = project.invoices.reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+    const totalExpenses = project.expenses.reduce((sum: number, expense: any) => sum + Number(expense.amount), 0);
+    const totalInvoiced = project.invoices.reduce((sum: number, invoice: any) => sum + Number(invoice.amount), 0);
     const budgetUtilization = (totalExpenses / Number(project.budget)) * 100;
 
     // Calculate milestone metrics
     const totalMilestones = project.milestones.length;
-    const completedMilestones = project.milestones.filter(m => m.status === 'COMPLETED').length;
-    const delayedMilestones = project.milestones.filter(m => m.status === 'DELAYED').length;
+    const completedMilestones = project.milestones.filter((m: any) => m.status === 'COMPLETED').length;
+    const delayedMilestones = project.milestones.filter((m: any) => m.status === 'DELAYED').length;
 
     // Calculate resource metrics
     const totalResources = project.allocations.length;
-    const totalAllocation = project.allocations.reduce((sum, alloc) => sum + Number(alloc.allocation), 0);
+    const totalAllocation = project.allocations.reduce((sum: number, alloc: any) => sum + Number(alloc.allocation), 0);
 
     const dashboard = {
       project: {
