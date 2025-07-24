@@ -44,7 +44,7 @@ VALUES (
     'demo-admin-id', 
     'admin@demo.com', 
     'Admin User', 
-    '$2a$10$rKZX.4/4z4YQh3.zW/KzE.F1XqQqJ3zJ4YQh3.zW/KzE.F1XqQqJ3zJ4', 
+    '$2a$10$40ADOqlE7ZkA0GtkJnqrneuigwU5G2kvEI5FiVoheSme9zFMzDhyO', 
     'ADMIN',
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
@@ -56,7 +56,7 @@ VALUES (
     'demo-pm-id', 
     'pm@demo.com', 
     'Project Manager', 
-    '$2a$10$rKZX.4/4z4YQh3.zW/KzE.F1XqQqJ3zJ4YQh3.zW/KzE.F1XqQqJ3zJ4', 
+    '$2a$10$40ADOqlE7ZkA0GtkJnqrneuigwU5G2kvEI5FiVoheSme9zFMzDhyO', 
     'PROJECT_MANAGER',
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP

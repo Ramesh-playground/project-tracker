@@ -38,11 +38,11 @@ router.get('/', async (req: AuthRequest, res) => {
     });
 
     // Parse JSON fields and calculate utilization
-    const resourcesWithParsedData = resources.map(resource => ({
+    const resourcesWithParsedData = resources.map((resource: any) => ({
       ...resource,
       skills: JSON.parse(resource.skills),
       certifications: resource.certifications ? JSON.parse(resource.certifications) : [],
-      currentUtilization: resource.allocations.reduce((sum, allocation) => sum + Number(allocation.allocation), 0)
+      currentUtilization: resource.allocations.reduce((sum: number, allocation: any) => sum + Number(allocation.allocation), 0)
     }));
 
     res.json(resourcesWithParsedData);
@@ -314,7 +314,7 @@ router.post('/:id/allocations', authorize(['ADMIN', 'RESOURCE_MANAGER', 'PROJECT
     });
 
     // Calculate total allocation during the period
-    const totalAllocation = overlappingAllocations.reduce((sum, alloc) => sum + Number(alloc.allocation), 0) + allocation;
+    const totalAllocation = overlappingAllocations.reduce((sum: number, alloc: any) => sum + Number(alloc.allocation), 0) + allocation;
 
     if (totalAllocation > 100) {
       return res.status(400).json({ 
@@ -391,8 +391,8 @@ router.get('/:id/utilization', async (req: AuthRequest, res) => {
         resourceId: resource.resourceId
       },
       totalAllocations: resource.allocations.length,
-      totalUtilization: resource.allocations.reduce((sum, alloc) => sum + Number(alloc.allocation), 0),
-      allocations: resource.allocations.map(alloc => ({
+      totalUtilization: resource.allocations.reduce((sum: number, alloc: any) => sum + Number(alloc.allocation), 0),
+      allocations: resource.allocations.map((alloc: any) => ({
         id: alloc.id,
         project: alloc.project,
         allocation: Number(alloc.allocation),
