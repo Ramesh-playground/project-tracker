@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(PROJECT_MANAGER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  projects Project[]
+  resources Resource[]
+  
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  PROJECT_MANAGER
+  RESOURCE_MANAGER
+  FINANCE_MANAGER
+  EXECUTIVE
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  projectId   String   @unique
+  description String?
+  
+  // PO Details
+  poNumber    String
+  poDate      DateTime
+  poAmount    Decimal
+  clientName  String
+  
+  // Project Duration
+  startDate   DateTime
+  endDate     DateTime
+  
+  // Budget (70% of PO amount)
+  budget      Decimal
+  
+  // Status
+  status      ProjectStatus @default(PLANNED)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  createdBy   String
+  user        User @relation(fields: [createdBy], references: [id])
+  
+  milestones  Milestone[]
+  allocations ResourceAllocation[]
+  expenses    Expense[]
+  invoices    Invoice[]
+  
+  @@map("projects")
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+model Resource {
+  id             String   @id @default(cuid())
+  resourceId     String   @unique
+  name           String
+  email          String   @unique
+  phone          String?
+  
+  // Cost details
+  salary         Decimal?
+  hourlyRate     Decimal?
+  
+  // Experience
+  yearsOfExp     Int
+  skills         String   // JSON array of skills
+  certifications String?  // JSON array of certifications
+  
+  // Status
+  isActive       Boolean  @default(true)
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  createdBy      String
+  user           User @relation(fields: [createdBy], references: [id])
+  
+  allocations    ResourceAllocation[]
+  
+  @@map("resources")
+}
+
+model ResourceAllocation {
+  id           String   @id @default(cuid())
+  
+  // Allocation details
+  startDate    DateTime
+  endDate      DateTime
+  allocation   Decimal  // Percentage allocation (0-100)
+  hourlyRate   Decimal
+  
+  // Status
+  isActive     Boolean  @default(true)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id])
+  resourceId   String
+  resource     Resource @relation(fields: [resourceId], references: [id])
+  
+  @@map("resource_allocations")
+}
+
+model Milestone {
+  id                String         @id @default(cuid())
+  name              String
+  description       String?
+  
+  // Dates
+  scheduledDate     DateTime
+  actualDate        DateTime?
+  
+  // Billing
+  isBillingMilestone Boolean       @default(false)
+  billingAmount      Decimal?
+  billingPercentage  Decimal?
+  
+  // Status
+  status            MilestoneStatus @default(PLANNED)
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  projectId         String
+  project           Project @relation(fields: [projectId], references: [id])
+  
+  invoices          Invoice[]
+  
+  @@map("milestones")
+}
+
+enum MilestoneStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  DELAYED
+  CANCELLED
+}
+
+model Expense {
+  id          String      @id @default(cuid())
+  description String
+  amount      Decimal
+  category    ExpenseCategory
+  date        DateTime
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  projectId   String
+  project     Project @relation(fields: [projectId], references: [id])
+  
+  @@map("expenses")
+}
+
+enum ExpenseCategory {
+  RESOURCE_COST
+  LICENSE
+  INFRASTRUCTURE
+  TRAVEL
+  MATERIAL
+  OTHER
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique
+  amount        Decimal
+  issueDate     DateTime
+  dueDate       DateTime
+  status        InvoiceStatus @default(PENDING)
+  paidDate      DateTime?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  projectId     String
+  project       Project @relation(fields: [projectId], references: [id])
+  milestoneId   String?
+  milestone     Milestone? @relation(fields: [milestoneId], references: [id])
+  
+  @@map("invoices")
+}
+
+enum InvoiceStatus {
+  PENDING
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}

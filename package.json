@@ -1,0 +1,25 @@
+{
+  "name": "project-tracker",
+  "version": "1.0.0",
+  "description": "A comprehensive project tracking application for managing projects, resources, financials, and milestones",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm run dev",
+    "build": "npm run server:build && npm run client:build",
+    "server:build": "cd server && npm run build",
+    "client:build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "test": "npm run server:test && npm run client:test",
+    "server:test": "cd server && npm test",
+    "client:test": "cd client && npm test",
+    "setup": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["project-tracking", "resource-management", "financial-tracking", "milestone-management"],
+  "author": "Project Tracker Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
