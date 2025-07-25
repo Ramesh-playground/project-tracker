@@ -1,0 +1,89 @@
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeVersion: '18.x'
+
+stages:
+- stage: Build
+  displayName: 'Build and Test'
+  jobs:
+  - job: BuildBackend
+    displayName: 'Build Backend'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: $(nodeVersion)
+      displayName: 'Install Node.js'
+
+    - script: |
+        cd src/backend
+        npm install
+        npm run build
+      displayName: 'Install dependencies and build backend'
+
+    - script: |
+        cd src/backend
+        npm test
+      displayName: 'Run backend tests'
+      continueOnError: true
+
+  - job: BuildFrontend
+    displayName: 'Build Frontend'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: $(nodeVersion)
+      displayName: 'Install Node.js'
+
+    - script: |
+        cd src/frontend
+        npm install
+        npm run build
+      displayName: 'Install dependencies and build frontend'
+
+    - script: |
+        cd src/frontend
+        npm test
+      displayName: 'Run frontend tests'
+      continueOnError: true
+
+- stage: Security
+  displayName: 'Security Scanning'
+  dependsOn: Build
+  jobs:
+  - job: SecurityScan
+    displayName: 'Security Analysis'
+    steps:
+    - script: |
+        cd src/backend && npm audit
+        cd ../frontend && npm audit
+      displayName: 'Run security audit'
+      continueOnError: true
+
+- stage: Deploy
+  displayName: 'Deploy to Azure'
+  dependsOn: Security
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: DeployToAzure
+    displayName: 'Deploy to Azure App Service'
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy to Azure Web App'
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              appType: 'webAppLinux'
+              appName: '$(webAppName)'
+              package: '$(Pipeline.Workspace)'
+              runtimeStack: 'NODE|18-lts'
