@@ -79,7 +79,14 @@ A comprehensive project tracking application designed to manage project details,
    ./setup.sh
    ```
 
-4. **Start the development server**
+4. **Set up environment variables**
+   ```bash
+   # Copy the example environment file
+   cp src/backend/.env.example src/backend/.env
+   # Edit the .env file with your configuration
+   ```
+
+5. **Start the development server**
    ```bash
    npm run dev
    ```
@@ -142,27 +149,49 @@ The application comes with pre-configured demo accounts:
 
 ```
 project-tracker/
-├── server/                 # Backend application
-│   ├── src/
-│   │   ├── routes/        # API route handlers
-│   │   ├── middleware/    # Authentication middleware
-│   │   ├── utils/         # Validation and utilities
-│   │   ├── server.ts      # Express server setup
-│   │   └── seed.ts        # Database seeding
-│   ├── prisma/
-│   │   └── schema.prisma  # Database schema
-│   └── package.json
-├── client/                # Frontend application
-│   ├── src/
-│   │   ├── components/    # Reusable UI components
-│   │   ├── pages/         # Page components
-│   │   ├── hooks/         # React hooks
-│   │   ├── services/      # API service layer
-│   │   ├── types/         # TypeScript type definitions
-│   │   └── App.tsx        # Main React component
-│   └── package.json
-├── setup.sh              # Database setup script
-└── package.json          # Root package configuration
+├── docs/                    # Documentation
+│   ├── BRD.md              # Business Requirements Document
+│   ├── TSD.md              # Technical Specification Document
+│   └── architecture.md     # System Architecture Documentation
+├── src/
+│   ├── backend/            # Backend application (Node.js/Express)
+│   │   ├── src/
+│   │   │   ├── routes/     # API route handlers
+│   │   │   ├── middleware/ # Authentication middleware
+│   │   │   ├── utils/      # Validation and utilities
+│   │   │   ├── server.ts   # Express server setup
+│   │   │   ├── seed.ts     # Database seeding
+│   │   │   └── db.ts       # Database connection (SQLite wrapper)
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma # Database schema
+│   │   │   └── dev.db      # SQLite database file
+│   │   ├── .env            # Environment variables
+│   │   └── package.json    # Backend dependencies
+│   └── frontend/           # Frontend application (React)
+│       ├── src/
+│       │   ├── components/ # Reusable UI components
+│       │   ├── pages/      # Page components
+│       │   ├── hooks/      # React hooks
+│       │   ├── services/   # API service layer
+│       │   ├── types/      # TypeScript type definitions
+│       │   └── App.tsx     # Main React component
+│       └── package.json    # Frontend dependencies
+├── tests/                  # Test files and documentation
+│   └── README.md           # Testing strategy and guidelines
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml       # GitHub Actions CI/CD pipeline
+├── deploy/
+│   ├── azure-pipeline.yml  # Azure DevOps pipeline
+│   └── docker-compose.yml  # Docker containerization
+├── security/
+│   ├── sast/
+│   │   └── config.md       # Static Application Security Testing
+│   └── secret-scanning/
+│       └── config.md       # Secret detection configuration
+├── setup.sh                # Database setup script
+├── package.json            # Root package configuration
+└── README.md               # This file
 ```
 
 ## Key Features Implementation

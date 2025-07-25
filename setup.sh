@@ -3,10 +3,10 @@
 echo "🚀 Setting up Project Tracker application..."
 
 # Create the database directory
-mkdir -p /home/runner/work/project-tracker/project-tracker/server/prisma
+mkdir -p /home/runner/work/project-tracker/project-tracker/src/backend/prisma
 
 # Create a simple SQLite database with basic structure
-sqlite3 /home/runner/work/project-tracker/project-tracker/server/prisma/dev.db << 'EOF'
+sqlite3 /home/runner/work/project-tracker/project-tracker/src/backend/prisma/dev.db << 'EOF'
 -- Create Users table
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
