@@ -259,7 +259,7 @@ router.get('/project/:projectId/timeline', async (req: AuthRequest, res) => {
         startDate: project.startDate,
         endDate: project.endDate
       },
-      milestones: milestones.map(milestone => ({
+      milestones: milestones.map((milestone: any) => ({
         id: milestone.id,
         name: milestone.name,
         scheduledDate: milestone.scheduledDate,
@@ -310,7 +310,7 @@ router.get('/delayed/all', async (req: AuthRequest, res) => {
       }
     });
 
-    const delayedWithCalculations = delayedMilestones.map(milestone => ({
+    const delayedWithCalculations = delayedMilestones.map((milestone: any) => ({
       ...milestone,
       daysDelayed: Math.floor(
         (currentDate.getTime() - new Date(milestone.scheduledDate).getTime()) / (1000 * 60 * 60 * 24)
